@@ -1,0 +1,28 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style TargetType="Button">
+        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border 
+                        Background="#1F557C" 
+                        CornerRadius="12"
+                        BorderThickness="2"
+                        BorderBrush="#4DA8E1">
+                        <ContentPresenter 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center" 
+                            RecognizesAccessKey="True"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    
+    <SolidColorBrush Color="#165E86" x:Key="Background"></SolidColorBrush>
+    <SolidColorBrush Color="#B1D0EB" x:Key="Text"></SolidColorBrush>
+    <SolidColorBrush Color="#4DA8E1" x:Key="TextBoxTheme"></SolidColorBrush>
+</ResourceDictionary>

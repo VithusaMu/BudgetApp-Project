@@ -1,0 +1,124 @@
+﻿<Window x:Class="HomeBudgetApp.DisplayBudgetItems"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HomeBudgetApp"
+        xmlns:toolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=DotNetProjects.DataVisualization.Toolkit"
+        mc:Ignorable="d"
+        Title="DisplayBudgetItems" MinHeight="500" MinWidth="1000" WindowStartupLocation="CenterScreen" Height="500" Width="1000" Background="{DynamicResource Background}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="1.2*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2.5*"/>
+        </Grid.ColumnDefinitions>
+
+        <ComboBox SelectionChanged="ComboBox_Themes_SelectionChanged" Margin="5" x:Name="ComboBox_Themes"></ComboBox>
+
+        
+        <TextBlock Foreground="{DynamicResource Text}" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="DemiBold" FontSize="20" >Display Options</TextBlock>
+        <GroupBox Foreground="{DynamicResource Text}" Header="Filter" Grid.Row="2" Margin="5"> 
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+
+
+                <StackPanel Margin="5">
+                    <TextBlock Foreground="{DynamicResource Text}">Start Date</TextBlock>
+                    <DatePicker SelectedDateChanged="StartDate_SelectedDateChanged" x:Name="StartDate"></DatePicker>
+                </StackPanel>
+
+                <StackPanel Margin="5" Grid.Row="1">
+                    <TextBlock Foreground="{DynamicResource Text}">End Date</TextBlock>
+                    <DatePicker SelectedDateChanged="EndDate_SelectedDateChanged" x:Name="EndDate"></DatePicker>
+                </StackPanel>
+
+                <CheckBox Unchecked="Filter_Unchecked" Checked="Filter_Checked" x:Name="ComboBoxFilter_Checked" Margin="5" VerticalAlignment="Bottom" Grid.Row="2" Foreground="{DynamicResource Text}">
+                    Filter by Category?
+                </CheckBox>
+
+                <ComboBox IsEnabled="False" SelectionChanged="cmb_Categories_SelectionChanged" Margin="5"  Grid.Row="3" x:Name="cmb_Categories"></ComboBox>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Margin="5" Foreground="{DynamicResource Text}" Header="Summary" Grid.Row="3">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <CheckBox Unchecked="Month_Unchecked" Checked="Month_Checked" Margin="5" Foreground="{DynamicResource Text}">
+                    By Month
+                </CheckBox>
+                <CheckBox Grid.Row="1" Unchecked="Category_Unchecked" Checked="Category_Checked" Margin="5" Foreground="{DynamicResource Text}">
+                    By Category
+                </CheckBox>
+
+                <CheckBox IsEnabled="False" Grid.Column="1" x:Name="PieChart" Unchecked="PieChart_Unchecked" Checked="PieChart_Checked" Margin="5" Foreground="{DynamicResource Text}">
+                    Graph
+                </CheckBox>
+            </Grid>
+        </GroupBox>
+
+        <Button x:Name="btn_addexpense" Grid.Row="4" Margin="10" Height="20" VerticalAlignment="Top" Foreground="{DynamicResource Text}"  Click="Add_Expense_Clicked">Add Expense</Button>
+
+        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <TextBox x:Name="tb_search" Foreground="{DynamicResource Text}" Background="{DynamicResource TextBoxTheme}" Width="200" Margin="5"></TextBox>
+            <Button x:Name="btn_search" Foreground="{DynamicResource Text}" Margin="10, 5, 10, 5" Width="100" Click="Btn_Search_Clicked" >Search</Button>
+        </StackPanel>
+
+        <Border x:Name="DG_Border" Margin="10"  Grid.Row="1" Grid.RowSpan="5" Grid.Column="1">
+            <DataGrid x:Name="DG_BudgetItems"  AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem x:Name="CM_EditExpense" Click="ContextMenu_EditExpense_Click" Header="Edit Expense"></MenuItem>
+                        <MenuItem x:Name="CM_DeleteExpense" Click="CM_DeleteExpense_Click" Header="Delete Expense"></MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            </DataGrid>
+        </Border>
+
+        <Grid x:Name="PieSeriesChart" Visibility="Collapsed" Grid.Column="1" Grid.Row="1" Grid.RowSpan="5" >
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="1" Margin="10,0,10,10">
+                    <TextBlock FontSize="18" Name="txtTitle" FontWeight="Bold" TextAlignment="Center" Foreground="{DynamicResource Text}">Month</TextBlock>
+                    <ComboBox Name="cbMonths" Margin="0,10,0,0" SelectionChanged="cbMonths_SelectionChanged"></ComboBox>
+                </StackPanel>
+
+
+                <toolkit:Chart Name="chPie" BorderThickness="0">
+                    <toolkit:LabeledPieSeries IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}" Height="250" Width="400">
+                    </toolkit:LabeledPieSeries>
+                </toolkit:Chart>
+                
+                <toolkit:Chart Name="chBar" Visibility="Hidden" BorderThickness="0">
+                    <toolkit:BarSeries IndependentValueBinding="{Binding Path=Key}" DependentValueBinding="{Binding Path=Value}" Height="250" Width="400">
+                    </toolkit:BarSeries>
+                </toolkit:Chart>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

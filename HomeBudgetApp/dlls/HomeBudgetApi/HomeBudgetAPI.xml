@@ -1,0 +1,1213 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HomeBudgetAPI</name>
+    </assembly>
+    <members>
+        <member name="T:HomeBudgetAPI.BudgetItem">
+            <summary>
+            A single bought item, that includes a category, expense, date, amount, description, balance, and amount
+            </summary>
+        </member>
+        <member name="P:HomeBudgetAPI.BudgetItem.CategoryID">
+            <summary>
+            Gets and sets the category ID of the budget item.
+            </summary>
+            <value>The ID of the category.</value>
+        </member>
+        <member name="P:HomeBudgetAPI.BudgetItem.ExpenseID">
+            <summary>
+            Gets and sets the expense ID of the budget item.
+            </summary>
+            <value>The ID of the expense.</value>
+        </member>
+        <member name="P:HomeBudgetAPI.BudgetItem.Date">
+            <summary>
+            Gets and sets the date of the budget item.
+            </summary>
+            <value>The date of when the item was purchased.</value>
+        </member>
+        <member name="P:HomeBudgetAPI.BudgetItem.Category">
+            <summary>
+            Gets and sets the category string of the item.
+            </summary>
+            <value>The category name of the item.</value>
+        </member>
+        <member name="P:HomeBudgetAPI.BudgetItem.ShortDescription">
+            <summary>
+            Gets and sets a short description of the item.
+            </summary>
+            <value>A brief description of the item.</value>
+        </member>
+        <member name="P:HomeBudgetAPI.BudgetItem.Amount">
+            <summary>
+            Gets and sets an amount for the budget item.
+            </summary>
+            <value>The cost of the item.</value>
+        </member>
+        <member name="P:HomeBudgetAPI.BudgetItem.Balance">
+            <summary>
+            Gets and sets the balance left.
+            </summary>
+            <value>The balance left.</value>
+        </member>
+        <member name="T:HomeBudgetAPI.BudgetItemsByMonth">
+            <summary>
+            Multiple budgets items from a month, that includes details, which is a list of BudgetItems, and total
+            </summary>
+        </member>
+        <member name="P:HomeBudgetAPI.BudgetItemsByMonth.Month">
+            <summary>
+            Gets and sets the month string for the items.
+            </summary>
+            <value>The month name for the collection of budget items.</value>
+        </member>
+        <member name="P:HomeBudgetAPI.BudgetItemsByMonth.Details">
+            <summary>
+            Gets and sets the details, which is a list of budget items for the month.
+            </summary>
+            <value>A collection of budget items.</value>
+        </member>
+        <member name="P:HomeBudgetAPI.BudgetItemsByMonth.Total">
+            <summary>
+            Gets and sets the total of the budget items by the month.
+            </summary>
+            <value>The total of the collection of budget items by the month.</value>
+        </member>
+        <member name="T:HomeBudgetAPI.BudgetItemsByCategory">
+            <summary>
+            Multiple budgets items from a category, that includes details, which is a list of BudgetItems and total
+            </summary>
+        </member>
+        <member name="P:HomeBudgetAPI.BudgetItemsByCategory.Category">
+            <summary>
+            Gets and sets the category string for the items.
+            </summary>
+            <value>The category name for the collection of budget items.</value>
+        </member>
+        <member name="P:HomeBudgetAPI.BudgetItemsByCategory.Details">
+            <summary>
+            Gets and sets the details, which is a list of budget items for the category.
+            </summary>
+            <value>A collection of budget items.</value>
+        </member>
+        <member name="P:HomeBudgetAPI.BudgetItemsByCategory.Total">
+            <summary>
+            Gets and sets the total of the budget items by the category.
+            </summary>
+            <value>The total of the collection of budget items by the category.</value>
+        </member>
+        <member name="T:HomeBudgetAPI.Categories">
+            <summary>
+            A collection of a group of items. Reads and writes to a Database.
+            </summary>
+        </member>
+        <member name="P:HomeBudgetAPI.Categories.Connection">
+            <summary>
+            Gets the sql connection.
+            </summary>
+            <returns>
+            Returns the sql connection.
+            </returns>
+        </member>
+        <member name="M:HomeBudgetAPI.Categories.#ctor(System.Data.SQLite.SQLiteConnection,System.Boolean)">
+            <summary>
+            Creates the categories object.
+            </summary>
+            <param name="connection">The database connection.</param>
+            <param name="isNewDB">If true, creates a new database, if false, uses an existing database.</param>
+            <exception cref="T:System.ArgumentException">Thrown when the enum type is not an enum.</exception>
+            <exception cref="T:System.ArgumentNullException">Thrown when the enum type is null.</exception>
+        </member>
+        <member name="M:HomeBudgetAPI.Categories.GetCategoryFromId(System.Int32)">
+            <summary>
+            Gets the category based on the category ID.
+            </summary>
+            <example>
+            <code>
+            Categories categories = new Categories(myDBConnection, isNewDatabase);
+            int categoryID = 5;
+            Category category = categories.GetCategoryFromId(categoryID);
+            </code>
+            </example>
+            <param name="i">The category ID.</param>
+            <returns>The category, if found.</returns>
+            <exception cref="T:System.Exception">Thrown when the category doesn't exist in the category database, therefore category is null.</exception>
+        </member>
+        <member name="M:HomeBudgetAPI.Categories.SetCategoriesToDefaults">
+            <summary>
+            Sets and populates the table of categories to default categories
+            </summary>
+            <example>
+            <code>
+            Categories categories = new Categories(myDBConnection, isNewDatabase);
+            categories.Add("Subscriptions", Category.CategoryType.Expense);
+            categories.SetCategoriesToDefaults();
+            </code>
+            </example>
+            <remarks>Please note that the categories are set to DEFAULT! Meaning existing ones are overriden!</remarks>
+        </member>
+        <member name="M:HomeBudgetAPI.Categories.Add(HomeBudgetAPI.Category)">
+            <summary>
+            Adds a category to the database.
+            </summary>
+            <example>
+            <code>
+            Categories categories = new Categories(myDBConnection, isNewDatabase);
+            categories.Add(category);
+            </code>
+            </example>
+            <param name="cat">The provided category to add to the database.</param>
+        </member>
+        <member name="M:HomeBudgetAPI.Categories.Add(System.String,HomeBudgetAPI.Category.CategoryType)">
+            <summary>
+            Adds a category to the table of categories by creating a category object.
+            </summary>
+            <example>
+            <code>
+            Categories categories = new Categories(myDBConnection, isNewDatabase);
+            categories.Add("Subscriptions", Category.CategoryType.Expense);
+            </code>
+            </example>
+            <param name="desc">A description of the category.</param>
+            <param name="type">The type of category.</param>
+        </member>
+        <member name="M:HomeBudgetAPI.Categories.Delete(System.Int32)">
+            <summary>
+            Deletes the category from the table of categories using a specified category ID.
+            </summary>
+            <example>
+            <code>
+            Categories categories = new Categories(myDBConnection, isNewDatabase);
+            categories.Add("Subscriptions", Category.CategoryType.Expense);
+            categories.Delete(17);
+            </code>
+            </example>
+            <param name="Id">The category ID to search for the category to delete from the table.</param>
+            <exception cref="T:System.Exception">Thrown when the category to delete doesn't exist in the category database, therefore category is null.</exception>
+        </member>
+        <member name="M:HomeBudgetAPI.Categories.List">
+            <summary>
+            Copies the list of categories into a new list to be unchanged by the user.
+            </summary>
+            <example>
+            <code>
+            <![CDATA[
+            Categories categories = new Categories(myDBConnection, isNewDatabase);
+            categories.Add(category);
+            List<Category> newList = categories.List();
+            ]]>
+            </code>
+            </example>
+            <returns>The new copy of the categories list.</returns>
+        </member>
+        <member name="M:HomeBudgetAPI.Categories.UpdateProperties(System.Int32,System.String,HomeBudgetAPI.Category.CategoryType)">
+            <summary>
+            Updates the category in the table of categories.
+            </summary>
+            <example>
+            <code>
+            Categories categories = new Categories(myDBConnection, isNewDatabase);
+            categories.Add(category);
+            categories.UpdateProperties(category.Id, "New Description", category.Type);
+            </code>
+            </example>
+            <param name="id">The id of the category.</param>
+            <param name="newDescr">The new description of the category.</param>
+            <param name="income">The new category type of the category.</param>
+            <exception cref="T:System.Exception">Thrown when the category to update doesn't exist in the category database, therefore category is null.</exception>
+        </member>
+        <member name="T:HomeBudgetAPI.Category">
+            <summary>
+            An individual group of things to classify budget items
+            </summary>
+        </member>
+        <member name="P:HomeBudgetAPI.Category.Id">
+            <summary>
+            Gets the category ID.
+            </summary>
+            <value>The ID of the category.</value>
+        </member>
+        <member name="P:HomeBudgetAPI.Category.Description">
+            <summary>
+            Gets the description of the category.
+            </summary>
+            <value>A description of the category.</value>
+        </member>
+        <member name="P:HomeBudgetAPI.Category.Type">
+            <summary>
+            Gets the type of category from the category type enum.
+            </summary>
+            <value>The type of the category.</value>
+        </member>
+        <member name="T:HomeBudgetAPI.Category.CategoryType">
+            <summary>
+            Category types for the category object.
+            </summary>
+        </member>
+        <member name="F:HomeBudgetAPI.Category.CategoryType.Income">
+            <summary>
+            Income category.
+            </summary>
+        </member>
+        <member name="F:HomeBudgetAPI.Category.CategoryType.Expense">
+            <summary>
+            Expense category.
+            </summary>
+        </member>
+        <member name="F:HomeBudgetAPI.Category.CategoryType.Credit">
+            <summary>
+            Credit category.
+            </summary>
+        </member>
+        <member name="F:HomeBudgetAPI.Category.CategoryType.Savings">
+            <summary>
+            Savings category.
+            </summary>
+        </member>
+        <member name="M:HomeBudgetAPI.Category.#ctor(System.Int32,System.String,HomeBudgetAPI.Category.CategoryType)">
+            <summary>
+            Creates a new category with the given id, description and type.
+            </summary>
+            <param name="id">The id of the category.</param>
+            <param name="description">The description of the category.</param>
+            <param name="type">The type of category.</param>
+        </member>
+        <member name="M:HomeBudgetAPI.Category.#ctor(HomeBudgetAPI.Category)">
+            <summary>
+            Creates a copy of a given category, for copying a list of categories into a new list.
+            </summary>
+            <param name="category">The category to copy.</param>
+        </member>
+        <member name="M:HomeBudgetAPI.Category.ToString">
+            <summary>
+            An override of the ToString method for the category class.
+            <example>
+            <code>
+            Category category = new Category(1, "Subscriptions", Category.CategoryType.Expense);
+            Console.WriteLine(category.ToString());
+            </code>
+            </example>
+            </summary>
+            <returns>The description of the category.</returns>
+        </member>
+        <member name="T:HomeBudgetAPI.Database">
+            <summary>
+            A database that keeps all information of categories, expenses, and category types.
+            </summary>
+        </member>
+        <member name="P:HomeBudgetAPI.Database.dbConnection">
+            <summary>
+            Property for Database Connection.
+            </summary>
+            <returns>
+            Gets the database connection.
+            </returns>
+        </member>
+        <member name="M:HomeBudgetAPI.Database.newDatabase(System.String)">
+            <summary>
+            Creates a new database. Existing data is overriden.
+            </summary>
+            <param name="filename">The database file.</param>
+            <example>
+                <code>
+                    Database.newDatabase(GetSolutionDir() + "\\" + filename);
+                    var cmd = new SQLiteCommand(Database.dbConnection);
+                    cmd.CommandText = "INSERT INTO categoryTypes(Description) VALUES('Whatever')";
+                    cmd.ExecuteNonQuery();
+                    cmd.Dispose();    
+                </code>
+            </example>
+        </member>
+        <member name="M:HomeBudgetAPI.Database.existingDatabase(System.String)">
+             <summary>
+             Loads in an already existing Database from the provided file.
+             </summary>
+             <param name="filename">The database file of an existing database.</param>
+            <example>
+                 <code>
+                     Database.existingDatabase(GetSolutionDir() + "\\" + filename);
+                     var cmd = new SQLiteCommand(Database.dbConnection);
+                     cmd.CommandText = "INSERT INTO categoryTypes(Description) VALUES('Whatever')";
+                     cmd.ExecuteNonQuery();
+                     cmd.Dispose();    
+                 </code>
+             </example>
+        </member>
+        <member name="M:HomeBudgetAPI.Database.CloseDatabaseAndReleaseFile">
+            <summary>
+            Closes an database and releases the file before continuing.
+            </summary>
+        </member>
+        <member name="T:HomeBudgetAPI.Expense">
+            <summary>
+            An individual cost required for a budget item
+            </summary>
+        </member>
+        <member name="P:HomeBudgetAPI.Expense.Id">
+            <summary>
+            Gets the expense ID.
+            </summary>
+            <value>The ID of the expense.</value>
+        </member>
+        <member name="P:HomeBudgetAPI.Expense.Date">
+            <summary>
+            Gets the date of the expense.
+            </summary>
+            <value>The date of when the expense was purchased.</value>
+        </member>
+        <member name="P:HomeBudgetAPI.Expense.Amount">
+            <summary>
+            Gets a cost for the expense.
+            </summary>
+            <value>The cost of the expense.</value>
+        </member>
+        <member name="P:HomeBudgetAPI.Expense.Description">
+            <summary>
+            Gets the description of the expense.
+            </summary>
+            <value>A description of the expense.</value>
+        </member>
+        <member name="P:HomeBudgetAPI.Expense.Category">
+            <summary>
+            Gets the category of the expense.
+            </summary>
+            <value>The category ID of the expense.</value>
+        </member>
+        <member name="M:HomeBudgetAPI.Expense.#ctor(System.Int32,System.DateTime,System.Int32,System.Double,System.String)">
+            <summary>
+            Creates an expense with a given id, date, category, amount and description.
+            </summary>
+            <param name="id">The id of the expense.</param>
+            <param name="date">The date of the expense.</param>
+            <param name="category">The category of the expense.</param>
+            <param name="amount">The amount of the expense.</param>
+            <param name="description">The description of the expense.</param>
+        </member>
+        <member name="M:HomeBudgetAPI.Expense.#ctor(HomeBudgetAPI.Expense)">
+            <summary>
+            Creates a copy of a given expense, for copying a list of expenses into a new list.
+            </summary>
+            <param name="obj">The expense to copy.</param>
+        </member>
+        <member name="T:HomeBudgetAPI.Expenses">
+            <summary>
+            A collection of required costs. Reads and writes to file.
+            </summary>
+        </member>
+        <member name="P:HomeBudgetAPI.Expenses.Connection">
+            <summary>
+            Gets the sql connection.
+            </summary>
+            <returns>
+            Returns the sql connection.
+            </returns>
+        </member>
+        <member name="M:HomeBudgetAPI.Expenses.#ctor(System.Data.SQLite.SQLiteConnection,System.Boolean)">
+            <summary>
+            Creates the expenses object.
+            </summary>
+            <param name="connection">The database connection.</param>
+            <param name="isNewDB">If true, creates a new database from the categories class, if false, uses the existing database.</param>
+        </member>
+        <member name="M:HomeBudgetAPI.Expenses.Add(System.DateTime,System.Int32,System.Double,System.String)">
+            <summary>
+            Adds an expense to the table of expenses by creating an expense object.
+            </summary>
+            <example>
+            <code>
+            Expenses expenses = new Expenses(myDBConnection, isNewDatabase);
+            expenses.Add(DateTime.Now, (int)Category.CategoryType.Expense, 85.00, "Doctor's appointment");
+            </code>
+            </example>
+            <param name="date">The date of the expense.</param>
+            <param name="category">The category of the expense.</param>
+            <param name="amount">The amount for the expense.</param>
+            <param name="description">The description of the expense.</param>
+        </member>
+        <member name="M:HomeBudgetAPI.Expenses.Delete(System.Int32)">
+            <summary>
+            Deletes the expense from the table of expenses using a specified expense ID.
+            </summary>
+            <example>
+            <code>
+            Expenses expenses = new Expenses(myDBConnection, isNewDatabase);
+            expenses.Add(DateTime.Now, (int)Category.CategoryType.Expense, 85.00, "Doctor's appointment");
+            expenses.Delete(1);
+            </code>
+            </example>
+            <param name="Id">The expense ID to search for the expense to delete from the table.</param>
+            <exception cref="T:System.Exception">Thrown when the expense to delete doesn't exist in the expenses database, therefore expense is null.</exception>
+        </member>
+        <member name="M:HomeBudgetAPI.Expenses.List">
+            <summary>
+            Copies the list of expenses into a new list to be unchanged by the user.
+            </summary>
+            <example>
+            <code>
+            <![CDATA[
+            Expenses expenses = new Expenses(myDBConnection, isNewDatabase);
+            expenses.Add(DateTime.Now, (int)Category.CategoryType.Expense, 85.00, "Doctor's appointment");
+            List<Expense> newList = expenses.List();
+            ]]>
+            </code>
+            </example>
+            <returns>The new copy of the expenses list.</returns>
+        </member>
+        <member name="M:HomeBudgetAPI.Expenses.GetExpenseFromId(System.Int32)">
+            <summary>
+            Gets the expense based on the expense ID.
+            </summary>
+            <example>
+            <code>
+            Expenses expenses = new Expenses(myDBConnection, isNewDatabase);
+            int expenseID = 5;
+            Expense expense = expenses.GetExpenseFromId(expenseID);
+            </code>
+            </example>
+            <param name="i">The expense ID.</param>
+            <returns>The expense, if found.</returns>
+            <exception cref="T:System.Exception">Thrown when the expense doesn't exist in the expenses database, therefore expense is null.</exception>
+        </member>
+        <member name="M:HomeBudgetAPI.Expenses.UpdateProperties(System.Int32,System.DateTime,System.Int32,System.Double,System.String)">
+            <summary>
+            Updates the expense in the table of expenses.
+            </summary>
+            <example>
+            <code>
+            Expenses expenses = new Expenses(myDBConnection, isNewDatabase);
+            expenses.Add(expense);
+            expenses.UpdateProperties(expense.Id, "New Description", expense.Type);
+            </code>
+            </example>
+            <param name="id">The id of the expense.</param>
+            <param name="newDescr">The new description of the expense.</param>
+            <param name="newDate"></param>
+            <param name="newAmount"></param>
+            <param name="categoryId"></param>
+            <exception cref="T:System.Exception">Thrown when the expense to update doesn't exist in the expenses database, therefore expense is null.</exception>
+        </member>
+        <member name="T:HomeBudgetAPI.HomeBudget">
+            <summary>
+            One main plan that combines the categories and expenses class. Reads from database for categorization. Gets budget items by month, category, none, or both.
+            </summary>
+            <example>
+            <code>
+            <![CDATA[
+            HomeBudget budget = new HomeBudget(String databaseFile, bool newDB);
+            
+            List<BudgetItem> budgetItems = homeBudget.GetBudgetItems(null, null, true, filterCategory); 
+            
+            List<BudgetItemsByMonth> budgetItemsByMonth = budget.GetBudgetItemsByMonth(startDate, endDate, false, 0);
+            
+            List<BudgetItemsByCategory> budgetItemsByCategory = budget.GetBudgetItemsByCategory(null, null, true, 9);
+            
+            List<Dictionary<string, object> budgetItemsByMonthCategory = homeBudget.GetBudgetDictionaryByCategoryAndMonth(startDate, endDate, true, 14);
+            ]]>
+            </code>
+            </example>
+            <seealso cref="T:HomeBudgetAPI.Categories"/>
+            <seealso cref="T:HomeBudgetAPI.Expenses"/>
+        </member>
+        <member name="P:HomeBudgetAPI.HomeBudget.categories">
+            <summary>
+            Gets the categories object
+            </summary>
+            <value>The categories object</value>
+        </member>
+        <member name="P:HomeBudgetAPI.HomeBudget.expenses">
+            <summary>
+            Gets the expenses object
+            </summary>
+            <value>The expenses object</value>
+        </member>
+        <member name="M:HomeBudgetAPI.HomeBudget.#ctor(System.String,System.Boolean)">
+            <summary>
+            Creates a HomeBudget object and initializes the Categories and Expenses objects with the database connection.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:HomeBudgetAPI.HomeBudget.GetBudgetItems(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Boolean,System.Int32)" -->
+        <!-- Badly formed XML comment ignored for member "M:HomeBudgetAPI.HomeBudget.GetBudgetItemsByMonth(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Boolean,System.Int32)" -->
+        <member name="M:HomeBudgetAPI.HomeBudget.GetBudgetItemsByCategory(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Boolean,System.Int32)">
+             <summary>
+             Gets a list of budget items from the database between a start and end date. Groups the list by category.
+             </summary>
+             <example>
+             For all examples below, assume the database contains the following rows % columns:
+            
+             <code>
+             Category: Clothes
+            
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             10         1          2018-01-10 12:00:00 AM    hat (on credit)      -10            -10
+             10         3          2019-01-10 12:00:00 AM    scarf (on credit)    -15            -15
+             Total: -$25.00
+            
+             Category: Credit Card
+            
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             9          2          2018-01-11 12:00:00 AM    hat                  10             0
+             9          4          2020-01-10 12:00:00 AM    scarf                15             0
+             9          13         2020-02-10 12:00:00 AM    mittens              15             -88.33
+             9          12         2020-02-25 12:00:00 AM    Hat                  25             -63.33
+             Total: $65.00
+            
+             Category: Eating Out
+            
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             14         5          2020-01-11 12:00:00 AM    McDonalds            -45            -45
+             14         7          2020-01-12 12:00:00 AM    Wendys               -25            -70
+             14         10         2020-02-01 12:00:00 AM    Pizza                -33.33         -103.33
+             14         11         2020-02-27 12:00:00 AM    Pizza                -33.33         -96.66
+             14         9          2020-07-11 12:00:00 AM    Cafeteria            -11.11         -107.77
+             Total: -$147.77
+             </code>
+             
+             <b>Getting a list of ALL budget items by category.</b>
+            
+             <code>
+             <![CDATA[
+             HomeBudget budget = new HomeBudget(String databaseFile, bool newDB);
+            
+             // Get a list of all budget items by category
+             List<BudgetItemsByCategory> budgetItemsByCategory = budget.GetBudgetItemsByCategory(null, null, false, 0);
+            
+             const string Format = "{0,-10} {1,-10} {2,-25} {3,-20} {4,-14} {5,-15}";
+            
+             // Print all budget items
+             foreach (BudgetItemsByCategory budgetItemCategory in budgetItemsByCategory)
+             {
+                 Console.WriteLine($"Category: {budgetItemCategory.Category}\n");
+                 Console.WriteLine(string.Format(Format, "Cat_ID", "Expense_ID", "Date", "Description", "Cost", "Balance"));
+                 foreach (BudgetItem budgetItem in budgetItemCategory.Details)
+                 {
+                     Console.WriteLine(string.Format(Format, budgetItem.CategoryID, budgetItem.ExpenseID, budgetItem.Date, budgetItem.ShortDescription, budgetItem.Amount, budgetItem.Balance));
+                 }
+                 Console.WriteLine($"Total: {budgetItemCategory.Total:C}\n");
+             }
+             ]]>
+             </code>
+            
+             Sample output:
+             <code>
+             Category: Clothes
+            
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             10         1          2018-01-10 12:00:00 AM    hat (on credit)      -10            -10
+             10         3          2019-01-10 12:00:00 AM    scarf (on credit)    -15            -15
+             Total: -$25.00
+            
+             Category: Credit Card
+            
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             9          2          2018-01-11 12:00:00 AM    hat                  10             0
+             9          4          2020-01-10 12:00:00 AM    scarf                15             0
+             9          13         2020-02-10 12:00:00 AM    mittens              15             -88.33
+             9          12         2020-02-25 12:00:00 AM    Hat                  25             -63.33
+             Total: $65.00
+            
+             Category: Eating Out
+            
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             14         5          2020-01-11 12:00:00 AM    McDonalds            -45            -45
+             14         7          2020-01-12 12:00:00 AM    Wendys               -25            -70
+             14         10         2020-02-01 12:00:00 AM    Pizza                -33.33         -103.33
+             14         11         2020-02-27 12:00:00 AM    Pizza                -33.33         -96.66
+             14         9          2020-07-11 12:00:00 AM    Cafeteria            -11.11         -107.77
+             Total: -$147.77
+             </code>
+             
+             <b>Getting a list of budget items by category within a date from the database.</b>
+             
+             <code>
+             <![CDATA[
+             HomeBudget budget = new HomeBudget(String databaseFile, bool newDB);
+             
+             DateTime startDate = new DateTime(2019, 1, 10);
+             DateTime endDate = new DateTime(2020, 2, 10);
+            
+             // Initialize a list of all budget items by category
+             List<BudgetItemsByCategory> budgetItemsByCategory = budget.GetBudgetItemsByCategory(startDate, endDate, false, 0);
+             
+             const string Format = "{0,-10} {1,-10} {2,-25} {3,-20} {4,-14} {5,-15}";
+            
+             // Print all budget items
+             foreach (BudgetItemsByCategory budgetItemCategory in budgetItemsByCategory)
+             {
+                 Console.WriteLine($"Category: {budgetItemCategory.Category}\n");
+                 Console.WriteLine(string.Format(Format, "Cat_ID", "Expense_ID", "Date", "Description", "Cost", "Balance"));
+                 foreach (BudgetItem budgetItem in budgetItemCategory.Details)
+                 {
+                     Console.WriteLine(string.Format(Format, budgetItem.CategoryID, budgetItem.ExpenseID, budgetItem.Date, budgetItem.ShortDescription, budgetItem.Amount, budgetItem.Balance));
+                 }
+                 Console.WriteLine($"Total: {budgetItemCategory.Total:C}\n");
+             }
+            
+             ]]>
+             </code>
+             
+             Sample output:
+             <code>
+             Category: Clothes
+             
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             10         3          2019-01-10 12:00:00 AM    scarf (on credit)    -15            -15
+             Total: -$15.00
+             
+             Category: Credit Card
+             
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             9          4          2020-01-10 12:00:00 AM    scarf                15             0
+             9          13         2020-02-10 12:00:00 AM    mittens              15             -88.33
+             Total: $30.00
+             
+             Category: Eating Out
+             
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             14         5          2020-01-11 12:00:00 AM    McDonalds            -45            -45
+             14         7          2020-01-12 12:00:00 AM    Wendys               -25            -70
+             14         10         2020-02-01 12:00:00 AM    Pizza                -33.33         -103.33
+             Total: -$103.33
+             </code>
+             
+             <b>Getting a list of ALL budget items by category with a filter flag ON from the database.</b>
+             <code>
+             <![CDATA[
+             HomeBudget budget = new HomeBudget(String databaseFile, bool newDB);
+             
+             // Initialize a list of all budget items by category
+             List<BudgetItemsByCategory> budgetItemsByCategory = budget.GetBudgetItemsByCategory(null, null, true, 9);
+             const string Format = "{0,-10} {1,-10} {2,-25} {3,-20} {4,-14} {5,-15}";
+            
+             // Print all budget items
+             foreach (BudgetItemsByCategory budgetItemCategory in budgetItemsByCategory)
+             {
+                 Console.WriteLine($"Category: {budgetItemCategory.Category}\n");
+                 Console.WriteLine(string.Format(Format, "Cat_ID", "Expense_ID", "Date", "Description", "Cost", "Balance"));
+                 foreach (BudgetItem budgetItem in budgetItemCategory.Details)
+                 {
+                     Console.WriteLine(string.Format(Format, budgetItem.CategoryID, budgetItem.ExpenseID, budgetItem.Date, budgetItem.ShortDescription, budgetItem.Amount, budgetItem.Balance));
+                 }
+                 Console.WriteLine($"Total: {budgetItemCategory.Total:C}\n");
+             }
+            
+             ]]>
+             </code>
+             
+             Sample output:
+             <code>
+             Category: Credit Card
+             
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             9          2          2018-01-11 12:00:00 AM    hat                  10             10
+             9          4          2020-01-10 12:00:00 AM    scarf                15             25
+             9          13         2020-02-10 12:00:00 AM    mittens              15             40
+             9          12         2020-02-25 12:00:00 AM    Hat                  25             65
+             Total: $65.00
+             </code>
+             
+             <b>Getting a list of a budget items by category within a date with a filter flag ON.</b>
+             
+             <code>
+             <![CDATA[
+             HomeBudget budget = new HomeBudget(String databaseFile, bool newDB);
+             
+             DateTime startDate = new DateTime(2019, 1, 10);
+             DateTime endDate = new DateTime(2020, 2, 10);
+            
+             // Initialize a list of all budget items by category
+             List<BudgetItemsByCategory> budgetItemsByCategory = budget.GetBudgetItemsByCategory(startDate, endDate, true, 14);
+             const string Format = "{0,-10} {1,-10} {2,-25} {3,-20} {4,-14} {5,-15}";
+            
+             // Print all budget items
+             foreach (BudgetItemsByCategory budgetItemCategory in budgetItemsByCategory)
+             {
+                 Console.WriteLine($"Category: {budgetItemCategory.Category}\n");
+                 Console.WriteLine(string.Format(Format, "Cat_ID", "Expense_ID", "Date", "Description", "Cost", "Balance"));
+                 foreach (BudgetItem budgetItem in budgetItemCategory.Details)
+                 {
+                     Console.WriteLine(string.Format(Format, budgetItem.CategoryID, budgetItem.ExpenseID, budgetItem.Date, budgetItem.ShortDescription, budgetItem.Amount, budgetItem.Balance));
+                 }
+                 Console.WriteLine($"Total: {budgetItemCategory.Total:C}\n");
+             }
+            
+             ]]>
+             </code>
+             
+             Sample output:
+             <code>
+             Category: Eating Out
+             
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             14         5          2020-01-11 12:00:00 AM    McDonalds            -45            -45
+             14         7          2020-01-12 12:00:00 AM    Wendys               -25            -70
+             14         10         2020-02-01 12:00:00 AM    Pizza                -33.33         -103.33
+             Total: -$103.33
+             </code>
+             </example>
+             <param name="Start">The start date of the budget items to be looked for.</param>
+             <param name="End">The end date of the budget items to be looked for.</param>
+             <param name="FilterFlag">If true, looks for budget items with one specific category. If false, looks for all budget items.</param>
+             <param name="CategoryID">The category ID to be searched with if the filter flag is on.</param>
+             <returns>A list of budget items between the start and end date, grouped by category.</returns>
+             <exception cref="T:System.ArgumentNullException">Thrown when the key condition to group the budget items, order the grouped categories or query is null.</exception>
+             <exception cref="T:System.ArgumentOutOfRangeException">Thrown when a given date is out of range or incorrect.</exception>
+        </member>
+        <member name="M:HomeBudgetAPI.HomeBudget.GetBudgetDictionaryByCategoryAndMonth(System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Boolean,System.Int32)">
+             <summary>
+             Gets a list of dictionaries of objects. The list of dictionaries contains dictionary objects with the month, the expenses per category for month, the total for the category for that month and the total for the month.
+             The last element will include a total of the categories for the entire duration of the start and end date.
+             </summary>
+             <example>
+             For all examples below, assume the database contains the following data:
+            
+             <code>
+             Month of 2018/01
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             10         1          2018-01-10 12:00:00 AM    hat (on credit)      -10            -10
+             Total for Clothes: -$10.00
+             
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             9          2          2018-01-11 12:00:00 AM    hat                  10             0
+             Total for Credit Card: $10.00
+             
+             -------------------------------
+             Total for the month: $0.00
+             
+             Month of 2019/01
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             10         3          2019-01-10 12:00:00 AM    scarf (on credit)    -15            -15
+             Total for Clothes: -$15.00
+             
+             -------------------------------
+             Total for the month: -$15.00
+             
+             Month of 2020/01
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             9          4          2020-01-10 12:00:00 AM    scarf                15             0
+             Total for Credit Card: $15.00
+             
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             14         5          2020-01-11 12:00:00 AM    McDonalds            -45            -45
+             14         7          2020-01-12 12:00:00 AM    Wendys               -25            -70
+             Total for Eating Out: -$70.00
+             
+             -------------------------------
+             Total for the month: -$55.00
+             
+             Month of 2020/02
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             9          13         2020-02-10 12:00:00 AM    mittens              15             -88.33
+             9          12         2020-02-25 12:00:00 AM    Hat                  25             -63.33
+             Total for Credit Card: $40.00
+             
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             14         10         2020-02-01 12:00:00 AM    Pizza                -33.33         -103.33
+             14         11         2020-02-27 12:00:00 AM    Pizza                -33.33         -96.66
+             Total for Eating Out: -$66.66
+             
+             -------------------------------
+             Total for the month: -$26.66
+             
+             Month of 2020/07
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             14         9          2020-07-11 12:00:00 AM    Cafeteria            -11.11         -107.77
+             Total for Eating Out: -$11.11
+             
+             -------------------------------
+             Total for the month: -$11.11
+             
+             Totals for all categories
+             Credit Card: $65.00
+             Clothes: -$25.00
+             Eating Out: -$147.77
+             </code>
+             
+             <b>Getting a list of dictionary of ALL budget items by category and month using GetBudgetItemsByMonth()</b>
+            
+             <code>
+             <![CDATA[
+             HomeBudget budget = new HomeBudget(String databaseFile, bool newDB);
+            
+             // Get a list of dictionaries
+             List<Dictionary<string, object>> budgetItemsByMonthCategory = homeBudget.GetBudgetDictionaryByCategoryAndMonth(null, null, false, 0);
+            
+             const string Format = "{0,-10} {1,-10} {2,-25} {3,-20} {4,-14} {5,-15}";
+            
+             // Print the list of dictionaries
+             foreach (Dictionary<string, object> budgetItemByMonth in budgetItemsByMonthCategory)
+             {
+                 string monthName = budgetItemByMonth["Month"].ToString();
+                 if (monthName == "TOTALS")
+                 {
+                     Console.WriteLine("Totals for all categories");
+                     foreach (KeyValuePair<string, object> entry in budgetItemByMonth)
+                     {
+                         if (entry.Value is double total)
+                             Console.WriteLine($"{entry.Key}: {total:C}");
+                     }
+             
+                 }
+                 else
+                 {
+                     Console.WriteLine($"Month of {monthName}");
+             
+                     foreach (KeyValuePair<string, object> entry in budgetItemByMonth)
+                     {
+                         string categoryName = "";
+                         if (entry.Value is List<BudgetItem> details)
+                         {
+                             Console.WriteLine(string.Format(Format, "Cat_ID", "Expense_ID", "Date", "Description", "Cost", "Balance"));
+                             foreach (BudgetItem item in details)
+                             {
+                                 categoryName = item.Category;
+                                 Console.WriteLine(string.Format(Format, item.CategoryID, item.ExpenseID, item.Date, item.ShortDescription, item.Amount, item.Balance));
+                             }
+             
+                             Console.WriteLine($"Total for {categoryName}: {budgetItemByMonth[categoryName]:C}\n");
+                         }
+             
+                     }
+                     Console.WriteLine("-------------------------------");
+                     Console.WriteLine($"Total for the month: {budgetItemByMonth["Total"]:C}\n");
+                 }
+             
+             }
+             ]]>
+             </code>
+            
+             Sample output:
+             <code>
+             Month of 2018/01
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             10         1          2018-01-10 12:00:00 AM    hat (on credit)      -10            -10
+             Total for Clothes: -$10.00
+             
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             9          2          2018-01-11 12:00:00 AM    hat                  10             0
+             Total for Credit Card: $10.00
+             
+             -------------------------------
+             Total for the month: $0.00
+             
+             Month of 2019/01
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             10         3          2019-01-10 12:00:00 AM    scarf (on credit)    -15            -15
+             Total for Clothes: -$15.00
+             
+             -------------------------------
+             Total for the month: -$15.00
+             
+             Month of 2020/01
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             9          4          2020-01-10 12:00:00 AM    scarf                15             0
+             Total for Credit Card: $15.00
+             
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             14         5          2020-01-11 12:00:00 AM    McDonalds            -45            -45
+             14         7          2020-01-12 12:00:00 AM    Wendys               -25            -70
+             Total for Eating Out: -$70.00
+             
+             -------------------------------
+             Total for the month: -$55.00
+             
+             Month of 2020/02
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             9          13         2020-02-10 12:00:00 AM    mittens              15             -88.33
+             9          12         2020-02-25 12:00:00 AM    Hat                  25             -63.33
+             Total for Credit Card: $40.00
+             
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             14         10         2020-02-01 12:00:00 AM    Pizza                -33.33         -103.33
+             14         11         2020-02-27 12:00:00 AM    Pizza                -33.33         -96.66
+             Total for Eating Out: -$66.66
+             
+             -------------------------------
+             Total for the month: -$26.66
+             
+             Month of 2020/07
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             14         9          2020-07-11 12:00:00 AM    Cafeteria            -11.11         -107.77
+             Total for Eating Out: -$11.11
+             
+             -------------------------------
+             Total for the month: -$11.11
+             
+             Totals for all categories
+             Credit Card: $65.00
+             Clothes: -$25.00
+             Eating Out: -$147.77
+             </code>
+             
+             <b>Getting a list of dictionary of budget items by category and month within a date.</b>
+             
+             <code>
+             <![CDATA[
+             HomeBudget budget = new HomeBudget(String databaseFile, bool newDB);
+             
+             DateTime startDate = new DateTime(2019, 1, 10);
+             DateTime endDate = new DateTime(2020, 2, 10);
+            
+             // Get a list of dictionaries
+             List<Dictionary<string, object>> budgetItemsByMonthCategory = homeBudget.GetBudgetDictionaryByCategoryAndMonth(startDate, endDate, false, 0);
+            
+             const string Format = "{0,-10} {1,-10} {2,-25} {3,-20} {4,-14} {5,-15}";
+            
+             // Print the list of dictionaries
+             foreach (Dictionary<string, object> budgetItemByMonth in budgetItemsByMonthCategory)
+             {
+                 string monthName = budgetItemByMonth["Month"].ToString();
+                 if (monthName == "TOTALS")
+                 {
+                     Console.WriteLine("Totals for all categories");
+                     foreach (KeyValuePair<string, object> entry in budgetItemByMonth)
+                     {
+                         if (entry.Value is double total)
+                             Console.WriteLine($"{entry.Key}: {total:C}");
+                     }
+             
+                 }
+                 else
+                 {
+                     Console.WriteLine($"Month of {monthName}");
+             
+                     foreach (KeyValuePair<string, object> entry in budgetItemByMonth)
+                     {
+                         string categoryName = "";
+                         if (entry.Value is List<BudgetItem> details)
+                         {
+                             Console.WriteLine(string.Format(Format, "Cat_ID", "Expense_ID", "Date", "Description", "Cost", "Balance"));
+                             foreach (BudgetItem item in details)
+                             {
+                                 categoryName = item.Category;
+                                 Console.WriteLine(string.Format(Format, item.CategoryID, item.ExpenseID, item.Date, item.ShortDescription, item.Amount, item.Balance));
+                             }
+             
+                             Console.WriteLine($"Total for {categoryName}: {budgetItemByMonth[categoryName]:C}\n");
+                         }
+             
+                     }
+                     Console.WriteLine("-------------------------------");
+                     Console.WriteLine($"Total for the month: {budgetItemByMonth["Total"]:C}\n");
+                 }
+             
+             }
+             ]]>
+             </code>
+             
+             Sample output:
+             <code>
+             Month of 2019/01
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             10         3          2019-01-10 12:00:00 AM    scarf (on credit)    -15            -15
+             Total for Clothes: -$15.00
+             
+             -------------------------------
+             Total for the month: -$15.00
+             
+             Month of 2020/01
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             9          4          2020-01-10 12:00:00 AM    scarf                15             0
+             Total for Credit Card: $15.00
+             
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             14         5          2020-01-11 12:00:00 AM    McDonalds            -45            -45
+             14         7          2020-01-12 12:00:00 AM    Wendys               -25            -70
+             Total for Eating Out: -$70.00
+             
+             -------------------------------
+             Total for the month: -$55.00
+             
+             Month of 2020/02
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             9          13         2020-02-10 12:00:00 AM    mittens              15             -88.33
+             Total for Credit Card: $15.00
+             
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             14         10         2020-02-01 12:00:00 AM    Pizza                -33.33         -103.33
+             Total for Eating Out: -$33.33
+             
+             -------------------------------
+             Total for the month: -$18.33
+             
+             Totals for all categories
+             Credit Card: $30.00
+             Clothes: -$15.00
+             Eating Out: -$103.33
+             </code>
+             
+             <b>Getting a list of dictionary of ALL budget items by category and month with a filter flag ON.</b>
+             
+             <code>
+             <![CDATA[
+             HomeBudget budget = new HomeBudget(String databaseFile, bool newDB);
+            
+             // Get a list of dictionaries
+             List<Dictionary<string, object>> budgetItemsByMonthCategory = homeBudget.GetBudgetDictionaryByCategoryAndMonth(null, null, true, 9);
+            
+             const string Format = "{0,-10} {1,-10} {2,-25} {3,-20} {4,-14} {5,-15}";
+            
+             // Print the list of dictionaries
+             foreach (Dictionary<string, object> budgetItemByMonth in budgetItemsByMonthCategory)
+             {
+                 string monthName = budgetItemByMonth["Month"].ToString();
+                 if (monthName == "TOTALS")
+                 {
+                     Console.WriteLine("Totals for all categories");
+                     foreach (KeyValuePair<string, object> entry in budgetItemByMonth)
+                     {
+                         if (entry.Value is double total)
+                             Console.WriteLine($"{entry.Key}: {total:C}");
+                     }
+             
+                 }
+                 else
+                 {
+                     Console.WriteLine($"Month of {monthName}");
+             
+                     foreach (KeyValuePair<string, object> entry in budgetItemByMonth)
+                     {
+                         string categoryName = "";
+                         if (entry.Value is List<BudgetItem> details)
+                         {
+                             Console.WriteLine(string.Format(Format, "Cat_ID", "Expense_ID", "Date", "Description", "Cost", "Balance"));
+                             foreach (BudgetItem item in details)
+                             {
+                                 categoryName = item.Category;
+                                 Console.WriteLine(string.Format(Format, item.CategoryID, item.ExpenseID, item.Date, item.ShortDescription, item.Amount, item.Balance));
+                             }
+             
+                             Console.WriteLine($"Total for {categoryName}: {budgetItemByMonth[categoryName]:C}\n");
+                         }
+             
+                     }
+                     Console.WriteLine("-------------------------------");
+                     Console.WriteLine($"Total for the month: {budgetItemByMonth["Total"]:C}\n");
+                 }
+             
+             }
+             ]]>
+             </code>
+             
+             Sample output:
+             <code>
+             Month of 2018/01
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             9          2          2018-01-11 12:00:00 AM    hat                  10             10
+             Total for Credit Card: $10.00
+             
+             -------------------------------
+             Total for the month: $10.00
+             
+             Month of 2020/01
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             9          4          2020-01-10 12:00:00 AM    scarf                15             25
+             Total for Credit Card: $15.00
+             
+             -------------------------------
+             Total for the month: $15.00
+             
+             Month of 2020/02
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             9          13         2020-02-10 12:00:00 AM    mittens              15             40
+             9          12         2020-02-25 12:00:00 AM    Hat                  25             65
+             Total for Credit Card: $40.00
+             
+             -------------------------------
+             Total for the month: $40.00
+             
+             Totals for all categories
+             Credit Card: $65.00
+             </code>
+             
+             <b>Getting a list of dictionary of budget items by category and month within a date with a filter flag ON.</b>
+             
+             <code>
+             <![CDATA[
+             HomeBudget budget = new HomeBudget(String databaseFile, bool newDB);
+             
+             DateTime startDate = new DateTime(2019, 1, 10);
+             DateTime endDate = new DateTime(2020, 2, 10);
+             
+             // Get a list of dictionaries
+             List<Dictionary<string, object>> budgetItemsByMonthCategory = homeBudget.GetBudgetDictionaryByCategoryAndMonth(startDate, endDate, true, 14);
+            
+             const string Format = "{0,-10} {1,-10} {2,-25} {3,-20} {4,-14} {5,-15}";
+            
+             // Print the list of dictionaries
+             foreach (Dictionary<string, object> budgetItemByMonth in budgetItemsByMonthCategory)
+             {
+                 string monthName = budgetItemByMonth["Month"].ToString();
+                 if (monthName == "TOTALS")
+                 {
+                     Console.WriteLine("Totals for all categories");
+                     foreach (KeyValuePair<string, object> entry in budgetItemByMonth)
+                     {
+                         if (entry.Value is double total)
+                             Console.WriteLine($"{entry.Key}: {total:C}");
+                     }
+             
+                 }
+                 else
+                 {
+                     Console.WriteLine($"Month of {monthName}");
+             
+                     foreach (KeyValuePair<string, object> entry in budgetItemByMonth)
+                     {
+                         string categoryName = "";
+                         if (entry.Value is List<BudgetItem> details)
+                         {
+                             Console.WriteLine(string.Format(Format, "Cat_ID", "Expense_ID", "Date", "Description", "Cost", "Balance"));
+                             foreach (BudgetItem item in details)
+                             {
+                                 categoryName = item.Category;
+                                 Console.WriteLine(string.Format(Format, item.CategoryID, item.ExpenseID, item.Date, item.ShortDescription, item.Amount, item.Balance));
+                             }
+             
+                             Console.WriteLine($"Total for {categoryName}: {budgetItemByMonth[categoryName]:C}\n");
+                         }
+             
+                     }
+                     Console.WriteLine("-------------------------------");
+                     Console.WriteLine($"Total for the month: {budgetItemByMonth["Total"]:C}\n");
+                 }
+             
+             }
+             ]]>
+             </code>
+             
+             Sample output:
+             <code>
+             Month of 2020/01
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             14         5          2020-01-11 12:00:00 AM    McDonalds            -45            -45
+             14         7          2020-01-12 12:00:00 AM    Wendys               -25            -70
+             Total for Eating Out: -$70.00
+             
+             -------------------------------
+             Total for the month: -$70.00
+             
+             Month of 2020/02
+             Cat_ID     Expense_ID Date                      Description          Cost           Balance
+             14         10         2020-02-01 12:00:00 AM    Pizza                -33.33         -103.33
+             Total for Eating Out: -$33.33
+             
+             -------------------------------
+             Total for the month: -$33.33
+             
+             Totals for all categories
+             Eating Out: -$103.33
+             </code>
+             </example>
+             <remarks>Adding the category totals together for the month will give the total of the expenses of that month.</remarks>
+             <param name="Start">The start date of the budget items to be looked for.</param>
+             <param name="End">The end date of the budget items to be looked for.</param>
+             <param name="FilterFlag">If true, looks for budget items with one specific category. If false, looks for all budget items.</param>
+             <param name="CategoryID">The category ID to be searched with if the filter flag is on.</param>
+             <returns>A list of dictionary objects. Contains a dictionary object with expenses per month, and a dictionary object for the total per category.</returns>
+             <exception cref="T:System.ArgumentNullException">Thrown when the key condition to group the budget items, the categories or order the query is null, or the key to find a value or to add a key and value is null.</exception>
+             <exception cref="T:System.FormatException">Thrown when the ToString format is invalid.</exception>
+             <exception cref="T:System.ArgumentException">Thrown when the key already exists in the dictionary</exception>
+        </member>
+    </members>
+</doc>
